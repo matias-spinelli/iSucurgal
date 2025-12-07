@@ -34,17 +34,25 @@ final class SucursalService {
         api.fetchSucursales { [weak self] result in
             switch result {
             case .success(let dtos):
+
+                guard !dtos.isEmpty else {
+                    completion(.failure(NSError(domain: "API", code: -2, userInfo: [NSLocalizedDescriptionKey: "API devolvió vacío"])))
+                    return
+                }
+
                 do {
                     try self?.repo.saveSucursales(dtos)
                     completion(.success(()))
                 } catch {
                     completion(.failure(error))
                 }
+
             case .failure(let err):
                 completion(.failure(err))
             }
         }
     }
+
 
     func fetchLocal() throws -> [Sucursal] {
         try repo.getAll()

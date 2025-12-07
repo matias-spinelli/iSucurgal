@@ -10,7 +10,7 @@ import CoreData
 
 struct SucursalesView: View {
 
-    @StateObject private var vm = SucursalesViewModel()
+    @EnvironmentObject var vm: SucursalesViewModel
 
     var body: some View {
         Group {
@@ -25,27 +25,31 @@ struct SucursalesView: View {
                     .foregroundColor(.gray)
             } else {
                 List(vm.sucursales) { suc in
-                    VStack(alignment: .leading) {
-                        Text(suc.name ?? "")
-                            .font(.headline)
-                        Text(suc.address ?? "")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                    NavigationLink(destination: SucursalDetailView(sucursal: suc)) {
+                        VStack(alignment: .leading) {
+                            Text(suc.name ?? "")
+                                .font(.headline)
+                            Text(suc.address ?? "")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
             }
         }
         .navigationTitle("Sucursales")
-        .onAppear {
-            vm.cargarDesdeCoreData()
-        }
     }
 }
 
+
 #Preview {
-    NavigationView {
+    let sucursalesViewModel = SucursalesViewModel()
+    sucursalesViewModel.cargarSucursales()
+    return NavigationView {
         SucursalesView()
             .environment(\.managedObjectContext,
                           DataController.preview.container.viewContext)
+            .environmentObject(sucursalesViewModel)
     }
 }
+

@@ -8,7 +8,6 @@
 import Foundation
 import Combine
 
-
 final class SucursalesViewModel: ObservableObject {
     @MainActor @Published var sucursales: [Sucursal] = []
     @MainActor @Published var isLoading: Bool = false
@@ -20,43 +19,79 @@ final class SucursalesViewModel: ObservableObject {
         self.service = service
     }
 
-    func cargarDesdeJSON() {
+    // MARK: - Método principal
+    @MainActor
+    func cargarSucursales() {
         isLoading = true
-        service.importFromJSONResource { [weak self] result in
-            Task { @MainActor in
-                guard let self else { return }
+        errorMessage = nil
+
+        // 1. Intentamos CoreData
+        do {
+            let locales = try service.fetchLocal()
+
+            if !locales.isEmpty {
+                self.sucursales = locales
                 self.isLoading = false
-                switch result {
-                case .success:
-                    self.cargarDesdeCoreData()
-                case .failure(let err):
-                    self.errorMessage = "Error importando JSON: \(err.localizedDescription)"
-                }
+                return
             }
+
+        } catch {
+            print("Error cargando CoreData: \(error.localizedDescription)")
         }
+
+        // 2. Si está vacío → API
+        traerDesdeAPI(oSiFallaLuego: cargarDesdeJSON)
     }
 
-    func traerDesdeAPI() {
-        isLoading = true
+    // MARK: - Paso API
+    private func traerDesdeAPI(oSiFallaLuego fallback: @escaping () -> Void) {
         service.fetchFromAPIAndSave { [weak self] result in
             Task { @MainActor in
                 guard let self else { return }
-                self.isLoading = false
+
                 switch result {
                 case .success:
                     self.cargarDesdeCoreData()
-                case .failure(let err):
-                    self.errorMessage = "Error API: \(err.localizedDescription)"
+                    self.isLoading = false
+
+                case .failure:
+                    print("API falló, fallback al JSON")
+                    fallback()
                 }
             }
         }
     }
 
+    // MARK: - Paso JSON
+    private func cargarDesdeJSON() {
+        service.importFromJSONResource { [weak self] result in
+            Task { @MainActor in
+                guard let self else { return }
+
+                switch result {
+                case .success:
+                    self.cargarDesdeCoreData()
+                    self.isLoading = false
+
+                case .failure(let err):
+                    self.errorMessage = "No hay sucursales disponibles.\n\(err.localizedDescription)"
+                    self.isLoading = false
+                }
+            }
+        }
+    }
+
+    // MARK: - CoreData reload
     func cargarDesdeCoreData() {
         do {
-            sucursales = try service.fetchLocal()
+            self.sucursales = try service.fetchLocal()
+
+            if self.sucursales.isEmpty {
+                self.errorMessage = "No hay sucursales disponibles."
+            }
+
         } catch {
-            errorMessage = "Error cargando CoreData: \(error.localizedDescription)"
+            self.errorMessage = "Error cargando CoreData: \(error.localizedDescription)"
         }
     }
 }
