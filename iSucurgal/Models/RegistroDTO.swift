@@ -19,3 +19,9 @@ public enum RegistroType: String, Codable {
     case entrada
     case salida
 }
+
+extension Registro {
+    var tipoEnum: RegistroType {
+        return RegistroType(rawValue: tipo) ?? .entrada
+    }
+}

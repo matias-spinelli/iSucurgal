@@ -19,13 +19,11 @@ final class SucursalesViewModel: ObservableObject {
         self.service = service
     }
 
-    // MARK: - Método principal
     @MainActor
     func cargarSucursales() {
         isLoading = true
         errorMessage = nil
 
-        // 1. Intentamos CoreData
         do {
             let locales = try service.fetchLocal()
 
@@ -39,11 +37,9 @@ final class SucursalesViewModel: ObservableObject {
             print("Error cargando CoreData: \(error.localizedDescription)")
         }
 
-        // 2. Si está vacío → API
         traerDesdeAPI(oSiFallaLuego: cargarDesdeJSON)
     }
 
-    // MARK: - Paso API
     private func traerDesdeAPI(oSiFallaLuego fallback: @escaping () -> Void) {
         service.fetchFromAPIAndSave { [weak self] result in
             Task { @MainActor in
@@ -62,7 +58,6 @@ final class SucursalesViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Paso JSON
     private func cargarDesdeJSON() {
         service.importFromJSONResource { [weak self] result in
             Task { @MainActor in
@@ -81,7 +76,6 @@ final class SucursalesViewModel: ObservableObject {
         }
     }
 
-    // MARK: - CoreData reload
     func cargarDesdeCoreData() {
         do {
             self.sucursales = try service.fetchLocal()
@@ -93,5 +87,11 @@ final class SucursalesViewModel: ObservableObject {
         } catch {
             self.errorMessage = "Error cargando CoreData: \(error.localizedDescription)"
         }
+    }
+}
+
+extension SucursalesViewModel {
+    func nombreDeSucursal(id: UUID) -> String? {
+        sucursales.first(where: { $0.id == id })?.name
     }
 }

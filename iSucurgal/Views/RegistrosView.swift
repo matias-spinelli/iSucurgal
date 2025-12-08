@@ -5,63 +5,50 @@
 //  Created by Matías Spinelli on 06/12/2025.
 //
 
-//
-//  RegistrosView.swift
-//  iSucurgal
-//
-//  Created by Matías Spinelli on 06/12/2025.
-//
-
 import SwiftUI
 import CoreData
 
 struct RegistrosView: View {
 
-    @StateObject private var vm = RegistroViewModel()
+    @EnvironmentObject var registroViewModel: RegistroViewModel
+    @EnvironmentObject var sucursalesViewModel: SucursalesViewModel
 
     var body: some View {
         Group {
-            if let error = vm.errorMessage {
+            if let error = registroViewModel.errorMessage {
                 Text(error)
                     .foregroundColor(.red)
                     .padding()
 
-            } else if vm.registros.isEmpty {
+            } else if registroViewModel.registros.isEmpty {
                 Text("No hay registros aún")
                     .foregroundColor(.gray)
 
             } else {
-                List(vm.registros) { reg in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(reg.tipo.capitalized)
-                                .font(.headline)
+                List {
+                    ForEach(registroViewModel.registros) { registro in
+                        let sucursal = sucursalesViewModel.sucursales.first { $0.id == registro.sucursalID }
 
-                            Text(reg.timestamp.formatted(date: .abbreviated, time: .shortened))
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-
-                        Spacer()
-
-                        Text("Suc: \(reg.sucursalID.uuidString.prefix(4))…")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                        RegistroRowView(registro: registro, sucursal: sucursal)
                     }
-                    .padding(.vertical, 4)
                 }
             }
         }
         .navigationTitle("Registros")
         .onAppear {
-            vm.cargar()
+            registroViewModel.cargarRegistros()
         }
     }
 }
 
 #Preview {
-    NavigationView {
+    let registroViewModel = RegistroViewModel()
+    registroViewModel.cargarRegistros()
+
+    return NavigationView {
         RegistrosView()
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+            .environmentObject(registroViewModel)
+            .environmentObject(SucursalesViewModel())
     }
 }

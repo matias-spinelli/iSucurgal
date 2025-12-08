@@ -17,25 +17,23 @@ final class LocationManager: NSObject, ObservableObject {
     @Published var userLocation: CLLocation?
     @Published var authorizationStatus: CLAuthorizationStatus?
 
+    weak var registroManager: RegistroManager?
+
     override init() {
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
 
-        // muy importante para background
         manager.allowsBackgroundLocationUpdates = true
         manager.pausesLocationUpdatesAutomatically = false
     }
 
     func requestAuthorization() {
-        // primero pide WhenInUse
         manager.requestWhenInUseAuthorization()
-
-        // cuando el usuario acepte, recién pedimos Always
-        // (esto se dispara en didChangeAuthorization)
     }
 
     func startUpdatingLocation() {
+        print("🔥 startUpdatingLocation() llamado con estado:", manager.authorizationStatus.rawValue)
         manager.startUpdatingLocation()
     }
 
@@ -51,18 +49,22 @@ extension LocationManager: CLLocationManagerDelegate {
 
         switch authorizationStatus {
         case .authorizedWhenInUse:
-            manager.requestAlwaysAuthorization()
-
+            startUpdatingLocation()
         case .authorizedAlways:
             startUpdatingLocation()
-
         default:
             break
         }
     }
 
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("📍 didUpdateLocations entregó:", locations.last?.coordinate ?? "nil")
         userLocation = locations.last
+
+        if let loc = userLocation {
+            registroManager?.processLocation(loc)
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

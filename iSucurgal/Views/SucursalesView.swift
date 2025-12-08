@@ -10,32 +10,41 @@ import CoreData
 
 struct SucursalesView: View {
 
-    @EnvironmentObject var vm: SucursalesViewModel
+    @EnvironmentObject var sucursalesViewModel: SucursalesViewModel
 
     var body: some View {
         Group {
-            if vm.isLoading {
+            if sucursalesViewModel.isLoading {
                 ProgressView("Cargando sucursales...")
-            } else if let error = vm.errorMessage {
+            } else if let error = sucursalesViewModel.errorMessage {
                 Text(error)
                     .foregroundColor(.red)
                     .padding()
-            } else if vm.sucursales.isEmpty {
+            } else if sucursalesViewModel.sucursales.isEmpty {
                 Text("No hay sucursales")
                     .foregroundColor(.gray)
             } else {
-                List(vm.sucursales) { suc in
-                    NavigationLink(destination: SucursalDetailView(sucursal: suc)) {
-                        VStack(alignment: .leading) {
-                            Text(suc.name ?? "")
-                                .font(.headline)
-                            Text(suc.address ?? "")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
+                List {
+                    NavigationLink(destination: SucursalesAllView(sucursales: sucursalesViewModel.sucursales)) {
+                        Text("Todas las sucursales")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                    }
+
+                    ForEach(sucursalesViewModel.sucursales) { sucursal in
+                        NavigationLink(destination: SucursalDetailView(sucursal: sucursal)) {
+                            VStack(alignment: .leading) {
+                                Text(sucursal.name)
+                                    .font(.headline)
+                                Text(sucursal.address)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                 }
             }
+
         }
         .navigationTitle("Sucursales")
     }

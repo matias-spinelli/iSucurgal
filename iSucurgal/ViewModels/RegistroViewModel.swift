@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import Foundation
 
 @MainActor
 final class RegistroViewModel: ObservableObject {
@@ -17,7 +16,7 @@ final class RegistroViewModel: ObservableObject {
 
     private let service = RegistroService()
 
-    func cargar() {
+    func cargarRegistros() {
         do {
             registros = try service.getHistorial()
         } catch {
@@ -25,21 +24,20 @@ final class RegistroViewModel: ObservableObject {
         }
     }
 
-    func registrarEntrada(sucursalID: UUID) {
+    func registrar(tipo: RegistroType, sucursalID: UUID) {
         do {
-            try service.crearRegistro(sucursalID: sucursalID, tipo: .entrada)
-            cargar()
+            try service.crearRegistro(sucursalID: sucursalID, tipo: tipo)
+            cargarRegistros()
         } catch {
             errorMessage = error.localizedDescription
         }
     }
 
+    func registrarEntrada(sucursalID: UUID) {
+        registrar(tipo: .entrada, sucursalID: sucursalID)
+    }
+
     func registrarSalida(sucursalID: UUID) {
-        do {
-            try service.crearRegistro(sucursalID: sucursalID, tipo: .salida)
-            cargar()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+        registrar(tipo: .salida, sucursalID: sucursalID)
     }
 }

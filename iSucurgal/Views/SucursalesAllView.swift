@@ -1,33 +1,37 @@
 //
-//  SucursalDetailView.swift
+//  SucursalesAllView.swift
 //  iSucurgal
 //
-//  Created by Matías Spinelli on 06/12/2025.
+//  Created by Matías Spinelli on 07/12/2025.
 //
 
 import SwiftUI
 import MapKit
-import CoreData
+import CoreLocation
 
-struct SucursalDetailView: View {
+struct SucursalesAllView: View {
 
-    let sucursal: Sucursal
+    let sucursales: [Sucursal]
     @EnvironmentObject var locationManager: LocationManager
 
     var body: some View {
         VStack {
             if let userLocation = locationManager.userLocation {
+
                 let userCoordinate = userLocation.coordinate
-                let sucusalCoordinate = CLLocationCoordinate2D(
-                    latitude: sucursal.latitude,
-                    longitude: sucursal.longitude
-                )
 
                 Map {
-                    Marker(sucursal.name, coordinate: sucusalCoordinate)
-
                     Marker("Vos", coordinate: userCoordinate)
                         .tint(.blue)
+
+                    ForEach(sucursales, id: \.id) { sucursal in
+                        let coordinate = CLLocationCoordinate2D(
+                            latitude: sucursal.latitude,
+                            longitude: sucursal.longitude
+                        )
+
+                        Marker(sucursal.name, coordinate: coordinate)
+                    }
                 }
                 .mapControls {
                     MapUserLocationButton()
@@ -39,7 +43,7 @@ struct SucursalDetailView: View {
                 ProgressView("Obteniendo ubicación…")
             }
         }
-        .navigationTitle(sucursal.name)
+        .navigationTitle("Todas las sucursales")
     }
 }
 
@@ -47,16 +51,13 @@ struct SucursalDetailView: View {
 #Preview {
     let sucursalesViewModel = SucursalesViewModel()
     sucursalesViewModel.cargarSucursales()
-    let sucursal = sucursalesViewModel.sucursales.first!
-    
-    let context = DataController.preview.container.viewContext
+    let sucursales = sucursalesViewModel.sucursales
 
     let locationManager = LocationManager()
     locationManager.userLocation = CLLocation(latitude: -34.60, longitude: -58.38)
-    
+
     return NavigationView {
-        SucursalDetailView(sucursal: sucursal)
-            .environment(\.managedObjectContext, context)
+        SucursalesAllView(sucursales: sucursales)
             .environmentObject(locationManager)
     }
 }
