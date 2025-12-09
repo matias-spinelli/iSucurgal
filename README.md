@@ -111,15 +111,15 @@ Si salís de una sucursal y hay otra cercana en el área:
 
 ---
 
-## 📸 Screenshots (agregalos vos cuando quieras)
+## 📸 Screenshots
 
-| Pantalla | Descripción |
-|:--------:|:-----------:|
-| *(pending)* | Registro en tiempo real |
-| *(pending)* | Vista de sucursales |
-| *(pending)* | Modo debug de ubicación |
+| <img src="https://github.com/matias-spinelli/matias-spinelli/blob/main/assets/iSucurgal/Home.png" width="260"/> | <img src="https://github.com/matias-spinelli/matias-spinelli/blob/main/assets/iSucurgal/Registros.png" width="260"/> |
+|:--:|:--:|
+| Home | Registros |
 
-Guardalas en `Assets/screenshots/` para mantener ordenado el repo.
+| <img src="https://github.com/matias-spinelli/matias-spinelli/blob/main/assets/iSucurgal/Sucursales.png" width="260"/> | <img src="https://github.com/matias-spinelli/matias-spinelli/blob/main/assets/iSucurgal/Sucursales-All.png" width="260"/> |
+|:--:|:--:|
+| Sucursales | Todas las Sucursales |
 
 ---
 
@@ -171,8 +171,7 @@ Próxima etapa: integrar:
 
 ## 🌟 Créditos
 
-Proyecto creado por **Matías Spinelli**  
-([@matias-spinelli](https://github.com/matias-spinelli))
+Proyecto creado por **Matías Spinelli**  ([@matias-spinelli](https://github.com/matias-spinelli))
 
 
 ---
