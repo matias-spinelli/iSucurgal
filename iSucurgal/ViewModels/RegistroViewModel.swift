@@ -33,6 +33,16 @@ final class RegistroViewModel: ObservableObject {
         }
     }
 
+    func clearAll() {
+        do {
+            try service.clearAll()
+            registros = []
+            print("✔️ Registros borrados")
+        } catch {
+            errorMessage = "Error borrando registros: \(error.localizedDescription)"
+        }
+    }
+    
     func registrarEntrada(sucursalID: UUID) {
         registrar(tipo: .entrada, sucursalID: sucursalID)
     }

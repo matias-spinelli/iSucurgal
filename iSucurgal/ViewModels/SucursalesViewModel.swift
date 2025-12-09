@@ -39,7 +39,7 @@ final class SucursalesViewModel: ObservableObject {
 
         traerDesdeAPI(oSiFallaLuego: cargarDesdeJSON)
     }
-
+    
     private func traerDesdeAPI(oSiFallaLuego fallback: @escaping () -> Void) {
         service.fetchFromAPIAndSave { [weak self] result in
             Task { @MainActor in
@@ -86,6 +86,16 @@ final class SucursalesViewModel: ObservableObject {
 
         } catch {
             self.errorMessage = "Error cargando CoreData: \(error.localizedDescription)"
+        }
+    }
+    
+    func clearAll() {
+        do {
+            try service.clearAll()
+            self.sucursales = []
+            print("✔️ Sucursales borradas correctamente")
+        } catch {
+            self.errorMessage = "No se pudo borrar sucursales: \(error.localizedDescription)"
         }
     }
 }

@@ -17,6 +17,7 @@ struct iSucurgalApp: App {
     @StateObject private var sucursalesViewModel = SucursalesViewModel()
     @StateObject private var registroViewModel = RegistroViewModel()
     @StateObject private var registroManager: RegistroManager
+    @StateObject private var geofencingManager = GeofencingManager()
 
     init() {
 
@@ -37,17 +38,32 @@ struct iSucurgalApp: App {
                 .environmentObject(sucursalesViewModel)
                 .environmentObject(registroViewModel)
                 .environmentObject(registroManager)
+            
                 .onAppear {
-                    
-                    locationManager.requestAuthorization()
-                    locationManager.registroManager = registroManager
-                    locationManager.startUpdatingLocation()
 
                     sucursalesViewModel.cargarSucursales()
-                    
                     registroManager.rebuildCache()
+
+                    locationManager.registroManager = registroManager
+                    locationManager.requestAuthorization()
+                    locationManager.start()
+
+                    geofencingManager.registroManager = registroManager
+                }
+            
+                .onChange(of: sucursalesViewModel.sucursales) { _, nuevasSucursales in
+                    guard !nuevasSucursales.isEmpty else { return }
+                    print("📍 Sucursales listas → configurando geofences")
+                    geofencingManager.setupGeofences(for: nuevasSucursales)
                 }
 
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                    locationManager.enterBackground()
+                }
+
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                    locationManager.enterForeground()
+                }
         }
     }
 }

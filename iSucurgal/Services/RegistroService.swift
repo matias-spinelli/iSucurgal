@@ -29,4 +29,8 @@ final class RegistroService {
     func getPorSucursal(_ id: UUID) throws -> [Registro] {
         try repo.getBySucursal(id)
     }
+    
+    func clearAll() throws {
+        try repo.clearAll()
+    }
 }

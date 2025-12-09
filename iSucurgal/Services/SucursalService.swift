@@ -53,6 +53,9 @@ final class SucursalService {
         }
     }
 
+    func clearAll() throws {
+        try repo.clearAll()
+    }
 
     func fetchLocal() throws -> [Sucursal] {
         try repo.getAll()

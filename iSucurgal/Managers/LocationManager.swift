@@ -29,45 +29,65 @@ final class LocationManager: NSObject, ObservableObject {
     }
 
     func requestAuthorization() {
-        manager.requestWhenInUseAuthorization()
+        print("📍 Solicitando autorización ALWAYS…")
+        manager.requestAlwaysAuthorization()
     }
 
-    func startUpdatingLocation() {
-        print("🔥 startUpdatingLocation() llamado con estado:", manager.authorizationStatus.rawValue)
+    func start() {
+        print("🚀 LocationManager.start()")
+
+        manager.startMonitoringSignificantLocationChanges()
         manager.startUpdatingLocation()
     }
 
-    func stopUpdatingLocation() {
+    func stop() {
+        print("🛑 LocationManager.stop()")
         manager.stopUpdatingLocation()
+        //manager.stopMonitoringSignificantLocationChanges()
+    }
+    
+    func enterForeground() {
+        print("☀️ App volvió a FOREGROUND → Reactivamos GPS preciso")
+        start()
+    }
+
+    func enterBackground() {
+        print("🌙 App pasó a BACKGROUND → Desactivamos GPS preciso")
+        stop()
     }
 }
+
+// MARK: - Delegate
 
 extension LocationManager: CLLocationManagerDelegate {
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        authorizationStatus = manager.authorizationStatus
+        let status = manager.authorizationStatus
+        authorizationStatus = status
 
-        switch authorizationStatus {
-        case .authorizedWhenInUse:
-            startUpdatingLocation()
+        print("🛂 [LOC] Authorization:", status.rawValue)
+
+        switch status {
         case .authorizedAlways:
-            startUpdatingLocation()
+            start()
+        case .authorizedWhenInUse:
+            manager.startUpdatingLocation()
         default:
-            break
+            print("🔴 Sin permisos suficientes")
         }
     }
 
-
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("📍 didUpdateLocations entregó:", locations.last?.coordinate ?? "nil")
-        userLocation = locations.last
 
-        if let loc = userLocation {
-            registroManager?.processLocation(loc)
-        }
+        guard let loc = locations.last else { return }
+
+        print("📍 [LOC] Update:", loc.coordinate)
+        userLocation = loc
+
+        registroManager?.processLocation(loc)
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Error de ubicación:", error.localizedDescription)
+        print("❌ Location error:", error.localizedDescription)
     }
 }
