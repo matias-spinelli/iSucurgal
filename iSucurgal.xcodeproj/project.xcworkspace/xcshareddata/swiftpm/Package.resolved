@@ -1,0 +1,15 @@
+{
+  "originHash" : "6ef1f698876017feda7c64375940c9d121976bd484130f83f520d14421c218e8",
+  "pins" : [
+    {
+      "identity" : "locationregisterkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/matias-spinelli/LocationRegisterKit.git",
+      "state" : {
+        "revision" : "7bd388b77ea7df1a3f42bf3448193e40399acaca",
+        "version" : "1.0.6"
+      }
+    }
+  ],
+  "version" : 3
+}

@@ -12,6 +12,7 @@
 
 import SwiftUI
 import CoreData
+import LocationRegisterKit
 
 struct HomeView: View {
 
@@ -157,7 +158,7 @@ struct HomeView: View {
     HomeView()
         .environment(\.managedObjectContext,
                       DataController.preview.container.viewContext)
-        .environmentObject(SucursalesViewModel())
-        .environmentObject(RegistroViewModel())
+        .environmentObject(LocationRegisterKitModule.shared.sucursalesViewModel)
+        .environmentObject(LocationRegisterKitModule.shared.registroViewModel)
         .environmentObject(GeofencingManager())
 }

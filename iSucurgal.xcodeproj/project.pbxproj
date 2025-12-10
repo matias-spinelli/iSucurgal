@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		00FD72FD2EE90ED4008FB348 /* LocationRegisterKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00FD72FC2EE90ED4008FB348 /* LocationRegisterKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		009810182EE383CF00DF806A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00FD72FD2EE90ED4008FB348 /* LocationRegisterKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +130,7 @@
 			);
 			name = iSucurgal;
 			packageProductDependencies = (
+				00FD72FC2EE90ED4008FB348 /* LocationRegisterKit */,
 			);
 			productName = iSucurgal;
 			productReference = 009810052EE383CE00DF806A /* iSucurgal.app */;
@@ -208,6 +214,9 @@
 			);
 			mainGroup = 00980FFC2EE383CE00DF806A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				00FD72FB2EE90ED4008FB348 /* XCRemoteSwiftPackageReference "LocationRegisterKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 009810062EE383CE00DF806A /* Products */;
 			projectDirPath = "";
@@ -638,6 +647,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		00FD72FB2EE90ED4008FB348 /* XCRemoteSwiftPackageReference "LocationRegisterKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/matias-spinelli/LocationRegisterKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		00FD72FC2EE90ED4008FB348 /* LocationRegisterKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00FD72FB2EE90ED4008FB348 /* XCRemoteSwiftPackageReference "LocationRegisterKit" */;
+			productName = LocationRegisterKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 00980FFD2EE383CE00DF806A /* Project object */;
 }

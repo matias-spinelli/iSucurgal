@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import LocationRegisterKit
 
 struct SucursalesView: View {
 
@@ -52,7 +53,7 @@ struct SucursalesView: View {
 
 
 #Preview {
-    let sucursalesViewModel = SucursalesViewModel()
+    let sucursalesViewModel = LocationRegisterKitModule.shared.sucursalesViewModel
     sucursalesViewModel.cargarSucursales()
     return NavigationView {
         SucursalesView()

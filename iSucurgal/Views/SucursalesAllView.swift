@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 import CoreLocation
+import LocationRegisterKit
 
 struct SucursalesAllView: View {
 
@@ -49,11 +50,11 @@ struct SucursalesAllView: View {
 
 
 #Preview {
-    let sucursalesViewModel = SucursalesViewModel()
+    let sucursalesViewModel = LocationRegisterKitModule.shared.sucursalesViewModel
     sucursalesViewModel.cargarSucursales()
     let sucursales = sucursalesViewModel.sucursales
 
-    let locationManager = LocationManager()
+    let locationManager = LocationRegisterKitModule.shared.locationManager
     locationManager.userLocation = CLLocation(latitude: -34.60, longitude: -58.38)
 
     return NavigationView {

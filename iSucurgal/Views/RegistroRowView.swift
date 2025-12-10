@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import LocationRegisterKit
 
 struct RegistroRowView: View {
     let registro: Registro
@@ -32,7 +33,7 @@ struct RegistroRowView: View {
                     .foregroundColor(.secondary)
 
                 if let sucursal = sucursal {
-                    Text(sucursal.name ?? "(Sucursal sin nombre)")
+                    Text(sucursal.name)
                         .font(.subheadline)
                         .foregroundColor(.blue)
                 } else {
@@ -63,6 +64,4 @@ struct RegistroRowView: View {
     sucursal.name = "Sucursal Demo"
 
     return RegistroRowView(registro: reg, sucursal: sucursal)
-        .padding()
-        .previewLayout(.sizeThatFits)
 }

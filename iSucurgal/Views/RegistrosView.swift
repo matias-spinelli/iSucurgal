@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import LocationRegisterKit
 
 struct RegistrosView: View {
 
@@ -42,13 +43,13 @@ struct RegistrosView: View {
 }
 
 #Preview {
-    let registroViewModel = RegistroViewModel()
+    let registroViewModel = LocationRegisterKitModule.shared.registroViewModel
     registroViewModel.cargarRegistros()
 
     return NavigationView {
         RegistrosView()
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
             .environmentObject(registroViewModel)
-            .environmentObject(SucursalesViewModel())
+            .environmentObject(LocationRegisterKitModule.shared.sucursalesViewModel)
     }
 }
