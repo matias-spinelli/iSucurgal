@@ -6,13 +6,10 @@
 ![Status](https://img.shields.io/badge/Status-En%20desarrollo-orange?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-**iSucurgal** es una aplicación desarrollada en **SwiftUI + Combine + CoreLocation**,  
-orientada a automatizar registros de **entrada y salida** en sucursales mediante  
-*detección inteligente por geolocalización*.  
+**iSucurgal** es una aplicación desarrollada en **SwiftUI + Combine**,
+que consume el módulo **LocationRegisterKit** para gestionar registros de entrada y salida en sucursales mediante geolocalización.
 
-La app cuenta con filtros de precisión, anti-jumps, distancias reales,  
-geofencing manual, validación de estado, logs en vivo y sincronización preparada  
-para futuros endpoints del backend.  
+El objetivo de esta app es mostrar y administrar sucursales y registros a través de interfaces limpias y rápidas, delegando toda la lógica de ubicación al módulo independiente.
 
 ---
 
@@ -24,25 +21,23 @@ para futuros endpoints del backend.
 - **CoreLocation**
 - **CoreData**
 - **MapKit**
-- **Background Tasks (ready)**
+- **Background Tasks**
+- **Swift Package Manager**
 - **Xcode 16+**
 - Compatible con **iOS 17+**
+
 
 ---
 
 ## ✨ Funcionalidades principales
 
-- 📍 **Detección automática** de entrada/salida a sucursales
-- 🎯 **Filtro de precisión** para descartar GPS impreciso
-- 🚫 **Anti-jump**: evita falsos eventos por saltos de señal
-- 🏷️ **Registro en tiempo real**, con logs detallados en consola
-- 🔄 **Reprocesamiento post-salida** para detectar nueva entrada inmediata
-- 🧠 **Persistencia del estado actual** (`currentSucursalID`)
-- 📡 **Soporte para simulación de ubicaciones (Xcode GPX)**
-- 🧱 **Arquitectura modular** con managers, view models y servicios
-- 🗂️ **CoreData listo** para historial y auditoría
-- 🛰️ **Geofences integrados** (didEnter/didExit) con lógica de protección
-- 📦 **Preparado para futuras integraciones de API** (login, sync, sucursales dinámicas)
+- 🌐 Integración transparente con **LocationRegisterKit** para toda la lógica de geolocalización y registro de entradas y salidas.
+
+- 🏠 **Home**: pantalla principal desde donde se puede navegar a **Registros** y a **Sucursales**. Sirve como punto de partida y resumen de la app.
+
+- 🗂️ **Sucursales**: muestra una lista de sucursales. Al tocar una sucursal se puede ver su detalle con su posición en el mapa. También es posible acceder a una vista con **Todas las Sucursales**, visualizadas en un mapa completo.
+
+- 📄 **Registros**: listado de registros de entrada y salida generados por el módulo, con información clara sobre cada evento.
 
 ---
 
@@ -50,63 +45,15 @@ para futuros endpoints del backend.
 
 ```
 iSucurgal/
-├── Managers/
-│ ├── RegistroManager.swift ← lógica de entrada/salida
-│ └── LocationManager.swift ← wrapper de CoreLocation
-│
-├── ViewModels/
-│ ├── RegistroViewModel.swift ← comunicación con UI
-│ └── SucursalesViewModel.swift ← listado + datos de sucursales
-│
-├── Models/
-│ ├── Sucursal.swift
-│ └── Registro.swift
-│
-├── Persistence/
-│ └── DataController.swift ← CoreData stack
-│
 ├── Views/
 │ ├── RegistroScreen.swift
 │ ├── SucursalesListView.swift
 │ └── DebugLocationView.swift
 │
 ├── Resources/
-│ ├── sucursales.json
 │ └── Assets.xcassets
 └── iSucurgalApp.swift
 ```
-
----
-
-## 🔍 Lógica principal: Registro por ubicación
-
-El núcleo de la app vive en **RegistroManager**, que implementa:
-
-### 📌 1. Filtro de precisión  
-Ignora ubicaciones cuyo `horizontalAccuracy > 50m`.
-
-### 📌 2. Anti-jump  
-Evita saltos artificiales marcando como inválidos movimientos de:
-- Si la app detecta un salto mayor a **800m en menos de 5s**, lo descarta.
-
-### 📌 3. Detección por radio real  
-Cada sucursal tiene coordenadas propias.  
-La app calcula la distancia exacta y valida:
-
-- Si está dentro del radio (50m default) → **ENTRADA**
-- Si estaba dentro y sale del radio → **SALIDA**
-
-### 📌 4. Estado persistente  
-La app mantiene `currentSucursalID` para saber:
-
-- si estás dentro
-- de dónde saliste
-- si corresponde registrar un evento nuevo
-- si debe ignorar duplicados
-
-### 📌 5. Post-salida inteligente  
-Si salís de una sucursal y hay otra cercana en el área:  
-- la app evalúa automáticamente si corresponde registrar una **nueva entrada**.
 
 
 ---
@@ -140,39 +87,14 @@ xed .
 
 💡 **Tip**
 
-Para probar ubicaciones en Xcode:
-
-`Debug → Simulate Location → Custom GPX…`
-
----
-
-## ☁️ Backend (próximamente)
-
-Próxima etapa: integrar:
-
-- 🔐 Login + Token  
-- 🔄 Sincronización de registros  
-- 📥 Descarga dinámica de sucursales  
-- 📝 Auditoría  
-- 📊 Dashboard interno  
-
----
-
-## 🎨 Diseño y estilo
-
-| Concepto | Estilo |
-|----------|--------|
-| 🟦 Identidad | Celeste / azul Galicia |
-| 📍 Mapas | MapKit + pins personalizados |
-| 🔵 Estados | Dentro / fuera de sucursal |
-| 🧭 Logs | Consola extendida + etiquetas de ubicación |
+El módulo LocationRegisterKit ya está incluido como dependencia SPM y no requiere configuración adicional para probar la app.
 
 ---
 
 ## 🌟 Créditos
 
 Proyecto creado por **Matías Spinelli**  ([@matias-spinelli](https://github.com/matias-spinelli))
-
+Aplicación desarrollada en **Swift** como práctica para aprender CoreData, CoreLocation y SwiftPackageManager.
 
 ---
 
