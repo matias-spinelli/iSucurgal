@@ -94,7 +94,7 @@ El módulo LocationRegisterKit ya está incluido como dependencia SPM y no requi
 ## 🌟 Créditos
 
 Proyecto creado por **Matías Spinelli**  ([@matias-spinelli](https://github.com/matias-spinelli))
-Aplicación desarrollada en **Swift** como práctica para aprender CoreData, CoreLocation y SwiftPackageManager.
+Aplicación desarrollada en **SwiftUI** como práctica para aprender CoreData, CoreLocation y SwiftPackageManager.
 
 ---
 

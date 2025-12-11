@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/matias-spinelli/LocationRegisterKit.git",
       "state" : {
-        "revision" : "7bd388b77ea7df1a3f42bf3448193e40399acaca",
-        "version" : "1.0.6"
+        "revision" : "46faf8e1d30b671bf540b45bf9a05e4b10efdbcf",
+        "version" : "1.1.2"
       }
     }
   ],

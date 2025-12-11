@@ -1,15 +1,15 @@
 //
-//  RegistrosView.swift
+//  RegistrosAPIView.swift
 //  iSucurgal
 //
-//  Created by Matías Spinelli on 06/12/2025.
+//  Created by Matías Spinelli on 11/12/2025.
 //
 
 import SwiftUI
 import CoreData
 import LocationRegisterKit
 
-struct RegistrosView: View {
+struct RegistrosAPIView: View {
 
     @EnvironmentObject var registroViewModel: RegistroViewModel
     @EnvironmentObject var sucursalesViewModel: SucursalesViewModel
@@ -21,13 +21,13 @@ struct RegistrosView: View {
                     .foregroundColor(.red)
                     .padding()
 
-            } else if registroViewModel.registros.isEmpty {
+            } else if registroViewModel.registrosAPI.isEmpty {
                 Text("No hay registros aún")
                     .foregroundColor(.gray)
 
             } else {
                 List {
-                    ForEach(registroViewModel.registros) { registro in
+                    ForEach(registroViewModel.registrosAPI) { registro in
                         let sucursal = sucursalesViewModel.sucursales.first { $0.id == registro.sucursalID }
 
                         RegistroRowView(registro: registro, sucursal: sucursal)
@@ -37,17 +37,21 @@ struct RegistrosView: View {
         }
         .navigationTitle("Registros")
         .onAppear {
-            registroViewModel.getRegistrosFromCoreData()
+            Task {
+                await registroViewModel.getRegistrosFromAPI()
+            }
         }
     }
 }
 
 #Preview {
     let registroViewModel = LocationRegisterKitModule.shared.registroViewModel
-    registroViewModel.getRegistrosFromCoreData()
-
+    Task {
+        await registroViewModel.getRegistrosFromAPI()
+    }
+    
     return NavigationView {
-        RegistrosView()
+        RegistrosAPIView()
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
             .environmentObject(registroViewModel)
             .environmentObject(LocationRegisterKitModule.shared.sucursalesViewModel)

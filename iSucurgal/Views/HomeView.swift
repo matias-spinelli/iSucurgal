@@ -35,9 +35,15 @@ struct HomeView: View {
                         )
 
                         navigationCard(
-                            title: "Registros",
+                            title: "Registros (CoreData)",
                             systemImage: "clock.arrow.circlepath",
                             destination: AnyView(RegistrosView())
+                        )
+                        
+                        navigationCard(
+                            title: "Registros (API)",
+                            systemImage: "clock.arrow.circlepath",
+                            destination: AnyView(RegistrosAPIView())
                         )
                     }
                     .padding(.horizontal)
