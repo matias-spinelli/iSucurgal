@@ -30,19 +30,18 @@ struct RegistrosAPIView: View {
                     ForEach(registroViewModel.registrosAPI) { registro in
                         let sucursal = sucursalesViewModel.sucursales.first { $0.id == registro.sucursalID }
 
-                        RegistroRowView(registro: registro, sucursal: sucursal)
+                        RegistroDTORowView(registro: registro, sucursal: sucursal)
                     }
                 }
             }
         }
         .navigationTitle("Registros")
-        .onAppear {
-            Task {
-                await registroViewModel.getRegistrosFromAPI()
-            }
+        .task {
+            await registroViewModel.getRegistrosFromAPI()
         }
     }
 }
+
 
 #Preview {
     let registroViewModel = LocationRegisterKitModule.shared.registroViewModel
